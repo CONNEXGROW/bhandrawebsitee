@@ -200,7 +200,7 @@
   <div class="info-container">
     <h1 class="info-heading">Bhandara Information</h1>
     <div id="contentContainer">
-      <!-- Content will be dynamically inserted here by website.js -->
+      <!-- Content will be dynamically inserted here by the script -->
     </div>
   </div>
 
@@ -226,7 +226,7 @@
   </footer>
 
   <script>
-    const API_URL = 'http://localhost:3000/api/data';
+    const API_URL = 'https://backend-n4ig.onrender.com/api/data'; // Live backend URL
 
     async function loadWebsiteContent() {
       try {
@@ -312,6 +312,7 @@
 
     observer.observe(statsSection);
 
+    // Load the content when the page loads
     loadWebsiteContent();
   </script>
 </body>
