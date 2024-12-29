@@ -237,31 +237,35 @@
         const contentContainer = document.getElementById('contentContainer');
         contentContainer.innerHTML = '';
 
-        data.forEach((entry) => {
-          const block = document.createElement('div');
-          block.className = 'info-block';
-          
-          block.innerHTML = `
-            <div class="info-section">
-              <div class="info-label">Name</div>
-              <div class="info-value">${entry.name}</div>
-            </div>
-            <div class="info-section">
-              <div class="info-label">Date</div>
-              <div class="info-value">${entry.date}</div>
-            </div>
-            <div class="info-section">
-              <div class="info-label">Time</div>
-              <div class="info-value">${entry.time}</div>
-            </div>
-            <div class="info-section">
-              <div class="info-label">Location</div>
-              <div class="info-value location-value">${entry.location}</div>
-            </div>
-          `;
-          
-          contentContainer.appendChild(block);
-        });
+        if (Array.isArray(data) && data.length > 0) {
+          data.forEach((entry) => {
+            const block = document.createElement('div');
+            block.className = 'info-block';
+            
+            block.innerHTML = `
+              <div class="info-section">
+                <div class="info-label">Name</div>
+                <div class="info-value">${entry.name || 'N/A'}</div>
+              </div>
+              <div class="info-section">
+                <div class="info-label">Date</div>
+                <div class="info-value">${entry.date || 'N/A'}</div>
+              </div>
+              <div class="info-section">
+                <div class="info-label">Time</div>
+                <div class="info-value">${entry.time || 'N/A'}</div>
+              </div>
+              <div class="info-section">
+                <div class="info-label">Location</div>
+                <div class="info-value location-value">${entry.location || 'N/A'}</div>
+              </div>
+            `;
+            
+            contentContainer.appendChild(block);
+          });
+        } else {
+          contentContainer.innerHTML = 'No data available.';
+        }
       } catch (error) {
         console.error('Error loading website content:', error);
         document.getElementById('contentContainer').textContent = 'Error loading content.';
