@@ -226,7 +226,7 @@
   </footer>
 
   <script>
-    const API_URL = 'https://backend-kshv.onrender.com/data'; // Corrected URL to point to the data endpoint
+    const API_URL = 'https://backend-kshv.onrender.com/data'; // Correct backend endpoint
 
     async function loadWebsiteContent() {
       try {
@@ -237,84 +237,36 @@
         const contentContainer = document.getElementById('contentContainer');
         contentContainer.innerHTML = '';
 
-        if (Array.isArray(data) && data.length > 0) {
-          data.forEach((entry) => {
-            const block = document.createElement('div');
-            block.className = 'info-block';
-            
-            block.innerHTML = `
-              <div class="info-section">
-                <div class="info-label">Name</div>
-                <div class="info-value">${entry.name || 'N/A'}</div>
-              </div>
-              <div class="info-section">
-                <div class="info-label">Date</div>
-                <div class="info-value">${entry.date || 'N/A'}</div>
-              </div>
-              <div class="info-section">
-                <div class="info-label">Time</div>
-                <div class="info-value">${entry.time || 'N/A'}</div>
-              </div>
-              <div class="info-section">
-                <div class="info-label">Location</div>
-                <div class="info-value location-value">${entry.location || 'N/A'}</div>
-              </div>
-            `;
-            
-            contentContainer.appendChild(block);
-          });
-        } else {
-          contentContainer.innerHTML = 'No data available.';
-        }
+        data.forEach((entry) => {
+          const block = document.createElement('div');
+          block.className = 'info-block';
+          
+          block.innerHTML = `        
+            <div class="info-section">
+              <div class="info-label">Name</div>
+              <div class="info-value">${entry.name}</div>
+            </div>
+            <div class="info-section">
+              <div class="info-label">Date</div>
+              <div class="info-value">${entry.date}</div>
+            </div>
+            <div class="info-section">
+              <div class="info-label">Time</div>
+              <div class="info-value">${entry.time}</div>
+            </div>
+            <div class="info-section">
+              <div class="info-label">Location</div>
+              <div class="info-value location-value">${entry.location}</div>
+            </div>
+          `;
+          
+          contentContainer.appendChild(block);
+        });
       } catch (error) {
         console.error('Error loading website content:', error);
         document.getElementById('contentContainer').textContent = 'Error loading content.';
       }
     }
-
-    function animateValue(id, start, end, duration) {
-      if (duration <= 0) return;
-
-      let obj = document.getElementById(id);
-      let range = end - start;
-      let minTimer = 50;
-      let stepTime = Math.max(Math.abs(Math.floor(duration / range)), minTimer);
-      let startTime = new Date().getTime();
-      let endTime = startTime + duration;
-      let timer;
-
-      function run() {
-        let now = new Date().getTime();
-        let remaining = Math.max((endTime - now) / duration, 0);
-        let value = Math.round(end - (remaining * range));
-        obj.innerHTML = value + "+";
-        if (value == end) {
-          clearInterval(timer);
-        }
-      }
-
-      timer = setInterval(run, stepTime);
-      run();
-    }
-
-    const statsSection = document.querySelector('.stats-section');
-    let animated = false;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !animated) {
-          statsSection.classList.add('visible');
-          animateValue("meals-served", 0, 10000, 3000);
-          animateValue("volunteers", 0, 50000, 4000);
-          animateValue("communities", 0, 50, 2000);
-          animated = true;
-        }
-      });
-    }, {
-      threshold: 0.1
-    });
-
-    observer.observe(statsSection);
 
     // Load the content when the page loads
     loadWebsiteContent();
