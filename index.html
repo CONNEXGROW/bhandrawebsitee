@@ -200,7 +200,7 @@
   <div class="info-container">
     <h1 class="info-heading">Bhandara Information</h1>
     <div id="contentContainer">
-      <!-- Content will be dynamically inserted here by website.js -->
+      <!-- Content will be dynamically inserted here -->
     </div>
   </div>
 
@@ -225,49 +225,64 @@
     <p>© 2023 Punya Pantry - Sharing Love Through Food. All rights reserved.</p>
   </footer>
 
-  <script>
-    const API_URL = 'https://backend-t3fk.onrender.com/api/data'; // Updated with your Render backend URL
+  <script type="module">
+    // Import Firebase functions
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
-    async function loadWebsiteContent() {
-      try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Failed to fetch data');
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD1NcfC-IjVXwaxMZG0kjn35L2zT6C5UJk",
+      authDomain: "bhandra-1fd1b.firebaseapp.com",
+      projectId: "bhandra-1fd1b",
+      storageBucket: "bhandra-1fd1b.appspot.com",
+      messagingSenderId: "643089692619",
+      appId: "1:643089692619:web:1d8d430ce550ab19d1e84e",
+      measurementId: "G-RJNF23H1J8"
+    };
 
-        const data = await response.json();
-        const contentContainer = document.getElementById('contentContainer');
-        contentContainer.innerHTML = '';
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        data.forEach((entry) => {
-          const block = document.createElement('div');
-          block.className = 'info-block';
-          
-          block.innerHTML = `
-            <div class="info-section">
-              <div class="info-label">Name</div>
-              <div class="info-value">${entry.name}</div>
-            </div>
-            <div class="info-section">
-              <div class="info-label">Date</div>
-              <div class="info-value">${entry.date}</div>
-            </div>
-            <div class="info-section">
-              <div class="info-label">Time</div>
-              <div class="info-value">${entry.time}</div>
-            </div>
-            <div class="info-section">
-              <div class="info-label">Location</div>
-              <div class="info-value location-value">${entry.location}</div>
-            </div>
-          `;
-          
-          contentContainer.appendChild(block);
-        });
-      } catch (error) {
-        console.error('Error loading website content:', error);
-        document.getElementById('contentContainer').textContent = 'Error loading content.';
-      }
+    // Fetch and display events
+    async function fetchEvents() {
+      const contentContainer = document.getElementById('contentContainer');
+      contentContainer.innerHTML = ''; // Clear existing content
+
+      const querySnapshot = await getDocs(collection(db, "events"));
+      querySnapshot.forEach((doc) => {
+        const event = doc.data();
+        const block = document.createElement('div');
+        block.className = 'info-block';
+
+        block.innerHTML = `
+          <div class="info-section">
+            <div class="info-label">Name</div>
+            <div class="info-value">${event.name}</div>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Date</div>
+            <div class="info-value">${event.date}</div>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Time</div>
+            <div class="info-value">${event.time}</div>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Location</div>
+            <div class="info-value location-value">${event.location}</div>
+          </div>
+        `;
+
+        contentContainer.appendChild(block);
+      });
     }
 
+    // Fetch events on page load
+    window.onload = fetchEvents;
+
+    // Stats animation
     function animateValue(id, start, end, duration) {
       if (duration <= 0) return;
 
@@ -311,8 +326,6 @@
     });
 
     observer.observe(statsSection);
-
-    loadWebsiteContent();
   </script>
 </body>
 </html>
