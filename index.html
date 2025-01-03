@@ -67,6 +67,12 @@
       gap: 0.5rem;
     }
 
+    .menu-icon {
+      display: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+    }
+
     .info-container {
       max-width: 1200px;
       margin: 4rem auto;
@@ -163,6 +169,22 @@
     @media (max-width: 768px) {
       .nav-links {
         display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: white;
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .menu-icon {
+        display: block;
       }
 
       .info-container {
@@ -185,6 +207,7 @@
   <nav class="navbar">
     <div class="nav-content">
       <a href="#" class="logo">Punya Pantry</a>
+      <div class="menu-icon">☰</div>
       <div class="nav-links">
         <a href="#" class="nav-link">Home</a>
         <a href="#" class="nav-link">Our Mission</a>
@@ -319,6 +342,14 @@
     });
 
     observer.observe(statsSection);
+
+    // Mobile menu toggle
+    const menuIcon = document.querySelector('.menu-icon');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuIcon.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
   </script>
 </body>
 </html>
