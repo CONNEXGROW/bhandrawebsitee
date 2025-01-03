@@ -166,6 +166,34 @@
       margin-top: auto;
     }
 
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px;
+    }
+
+    .loading::after {
+      content: "";
+      width: 50px;
+      height: 50px;
+      border: 10px solid #dddddd;
+      border-top: 10px solid #FF8C00;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .pull-to-refresh {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+
     @media (max-width: 768px) {
       .nav-links {
         display: none;
@@ -222,8 +250,9 @@
 
   <div class="info-container">
     <h1 class="info-heading">Bhandara Information</h1>
+    <div class="pull-to-refresh">Pull down to refresh</div>
     <div id="contentContainer">
-      <!-- Content will be dynamically inserted here -->
+      <div class="loading"></div>
     </div>
   </div>
 
@@ -295,8 +324,10 @@
       });
     }
 
-    // Fetch events on page load
-    fetchEvents();
+    // Fetch events on page load with a delay to show loading animation
+    setTimeout(() => {
+      fetchEvents();
+    }, 2000);
 
     // Stats animation
     function animateValue(id, start, end, duration) {
@@ -350,6 +381,33 @@
     menuIcon.addEventListener('click', () => {
       navLinks.classList.toggle('active');
     });
+
+    // Pull-to-refresh functionality
+    let touchstartY = 0;
+    let touchendY = 0;
+
+    document.addEventListener('touchstart', e => {
+      touchstartY = e.changedTouches[0].screenY;
+    });
+
+    document.addEventListener('touchend', e => {
+      touchendY = e.changedTouches[0].screenY;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      if (touchendY < touchstartY) return; // Swiped up, ignore
+      if (touchendY - touchstartY > 100 && window.scrollY === 0) {
+        // Pulled down more than 100px and at the top of the page
+        refreshContent();
+      }
+    }
+
+    function refreshContent() {
+      const contentContainer = document.getElementById('contentContainer');
+      contentContainer.innerHTML = '<div class="loading"></div>';
+      fetchEvents();
+    }
   </script>
 </body>
 </html>
